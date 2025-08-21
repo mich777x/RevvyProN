@@ -52,7 +52,7 @@ export default function HomePage() {
 						<Link href="/api/auth/signin" className="rounded-xl border border-neutral-700 px-4 py-2 hover:border-neutral-500">
 							Sign in
 						</Link>
-						<Link href="/dashboard"> className="rounded-xl bg-neutral-100 text-neutral-900 px-4 py-2 font-semibold hover:bg-white">
+						<Link href="/dashboard" className="rounded-xl bg-neutral-100 text-neutral-900 px-4 py-2 font-semibold hover:bg-white">
 							Dashboard
 						</Link>
 					</div>
