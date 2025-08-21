@@ -22,9 +22,6 @@
         "./src/*"
       ]
     },
-    "types": [
-      "stripe-event-types"
-    ],
     "isolatedModules": true,
     "plugins": [
       {
