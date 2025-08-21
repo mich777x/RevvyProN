@@ -41,7 +41,7 @@ export async function POST(req: Request) {
 
 		// 3) Lazy import Stripe & init with the secret
 		const { default: Stripe } = await import("stripe");
-		const stripe = new Stripe(secret, { apiVersion: "2024-06-20" });
+		const stripe = new Stripe(secret, { apiVersion: "2025-07-30.basil" });
 
 		// 4) Verify the price actually exists and is active (great for catching wrong mode / typos)
 		let price;
