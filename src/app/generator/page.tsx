@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 type Platform = "tiktok" | "facebook" | "instagram" | "google";
 
@@ -86,9 +87,7 @@ export default function GeneratorPage() {
 		<main className="mx-auto max-w-6xl px-6 py-10">
 			<div className="flex items-center justify-between">
 				<h1 className="text-3xl md:text-4xl font-extrabold">Ad Creative Generator</h1>
-				<a href="/" className="text-sm text-neutral-400 hover:text-neutral-200">
-					← Back
-				</a>
+				<Link href="/">Back</Link>
 			</div>
 
 			{/* Form */}
