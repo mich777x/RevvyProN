@@ -13,7 +13,7 @@ export default function Testimonials() {
 						<h3 className="mt-4 font-semibold">- Beta User 2</h3>
 					</div>
 					<div className="p-6 bg-white rounded-xl shadow">
-						<p>Best $499 we've spent — CTR doubled instantly.</p>
+						<p>Best $499 we have spent — CTR doubled instantly.</p>
 						<h3 className="mt-4 font-semibold">- Beta User 3</h3>
 					</div>
 				</div>

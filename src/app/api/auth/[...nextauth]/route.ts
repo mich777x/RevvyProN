@@ -1,5 +1,20 @@
 import NextAuth from "next-auth";
 import Google from "next-auth/providers/google";
+import { JWT } from "next-auth/jwt";
+import { Session } from "next-auth";
+
+// Extend the built-in session types
+declare module "next-auth" {
+	interface Session {
+		plan?: string | null;
+	}
+}
+
+declare module "next-auth/jwt" {
+	interface JWT {
+		plan?: string | null;
+	}
+}
 
 const handler = NextAuth({
 	providers: [
@@ -11,13 +26,13 @@ const handler = NextAuth({
 	session: { strategy: "jwt" },
 	pages: {}, // using App Router pages
 	callbacks: {
-		async jwt({ token }) {
+		async jwt({ token }: { token: JWT }) {
 			// add any custom fields here later (e.g., plan from DB)
 			return token;
 		},
-		async session({ session, token }) {
+		async session({ session, token }: { session: Session; token: JWT }) {
 			// expose fields from token into session if needed
-			(session as any).plan = (token as any).plan ?? null;
+			session.plan = token.plan ?? null;
 			return session;
 		},
 	},

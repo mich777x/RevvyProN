@@ -1,5 +1,3 @@
-// src/app/api/checkout/route.ts
-
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
@@ -26,7 +24,7 @@ export async function POST(req: Request) {
 	try {
 		const body = (await req.json()) as Body;
 
-		// 1) Validate Stripe secret exists (don’t crash app on boot)
+		// 1) Validate Stripe secret exists (don't crash app on boot)
 		const secret = process.env.STRIPE_SECRET_KEY;
 		if (!secret) return json({ error: "Missing STRIPE_SECRET_KEY (set in .env.local or hosting env)" }, 500);
 
@@ -52,21 +50,22 @@ export async function POST(req: Request) {
 			if (!price.active) {
 				return json({ error: `Stripe price ${priceId} is not active` }, 400);
 			}
-		} catch (e: any) {
+		} catch (e: unknown) {
+			const errorMessage = e instanceof Error ? e.message : String(e);
 			return json(
 				{
 					error: `Unable to retrieve Stripe price: ${priceId}. Check that it exists and matches your key mode (test vs live).`,
-					detail: e?.message || String(e),
+					detail: errorMessage,
 				},
 				400
 			);
 		}
 
 		// 5) Basic quantity & URLs
-		const qty = Math.max(1, Math.min(Number((body as any).quantity ?? 1), 99));
+		const qty = Math.max(1, Math.min(Number(body.quantity ?? 1), 99));
 		const domain = getDomain();
-		const successPath = (body as any).successPath || "/success?session_id={CHECKOUT_SESSION_ID}";
-		const cancelPath = (body as any).cancelPath || "/#pricing";
+		const successPath = body.successPath || "/success?session_id={CHECKOUT_SESSION_ID}";
+		const cancelPath = body.cancelPath || "/#pricing";
 
 		// 6) Create Checkout session
 		const session = await stripe.checkout.sessions.create({
@@ -83,14 +82,15 @@ export async function POST(req: Request) {
 
 		if (!session.url) return json({ error: "Stripe did not return a session URL" }, 500);
 		return json({ url: session.url }, 200);
-	} catch (err: any) {
+	} catch (err: unknown) {
 		// In dev, include more detail; in prod keep it generic
 		const isDev = process.env.NODE_ENV !== "production";
-		console.error("[CHECKOUT_ERROR]", err?.message || err);
+		const errorMessage = err instanceof Error ? err.message : String(err);
+		console.error("[CHECKOUT_ERROR]", errorMessage);
 		return json(
 			{
 				error: "Stripe checkout error",
-				...(isDev ? { detail: err?.message || String(err) } : {}),
+				...(isDev ? { detail: errorMessage } : {}),
 			},
 			500
 		);
