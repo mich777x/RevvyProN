@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { signOut, useSession } from "next-auth/react";
+import Link from "next/link";
 
 type Plan = "starter" | "growth" | "agency" | null;
 
@@ -67,9 +68,9 @@ export default function DashboardPage() {
 						<a href="/generator" className="rounded-xl border border-neutral-700 px-3 py-2 hover:border-neutral-500 text-sm">
 							Ad Creative Generator
 						</a>
-						<a href="/" className="rounded-xl border border-neutral-700 px-3 py-2 hover:border-neutral-500 text-sm">
+						<Link href="/" className="rounded-xl border border-neutral-700 px-3 py-2 hover:border-neutral-500 text-sm">
 							Pricing
-						</a>
+						</Link>
 					</div>
 				</div>
 			</section>

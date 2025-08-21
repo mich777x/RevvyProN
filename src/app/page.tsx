@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
 type Plan = "starter" | "growth" | "agency";
 
@@ -42,18 +43,18 @@ export default function HomePage() {
 						Revvy <span className="text-fuchsia-400">Pro</span>
 					</div>
 					<div className="flex items-center gap-2">
-						<a href="/generator" className="rounded-xl border border-neutral-700 px-4 py-2 hover:border-neutral-500">
+						<Link href="/generator" className="rounded-xl border border-neutral-700 px-4 py-2 hover:border-neutral-500">
 							Generator
-						</a>
-						<a href="#pricing" className="rounded-xl border border-neutral-700 px-4 py-2 hover:border-fuchsia-500">
+						</Link>
+						<Link href="#pricing" className="rounded-xl border border-neutral-700 px-4 py-2 hover:border-fuchsia-500">
 							Pricing
-						</a>
-						<a href="/api/auth/signin" className="rounded-xl border border-neutral-700 px-4 py-2 hover:border-neutral-500">
+						</Link>
+						<Link href="/api/auth/signin" className="rounded-xl border border-neutral-700 px-4 py-2 hover:border-neutral-500">
 							Sign in
-						</a>
-						<a href="/dashboard" className="rounded-xl bg-neutral-100 text-neutral-900 px-4 py-2 font-semibold hover:bg-white">
+						</Link>
+						<Link href="/dashboard"> className="rounded-xl bg-neutral-100 text-neutral-900 px-4 py-2 font-semibold hover:bg-white">
 							Dashboard
-						</a>
+						</Link>
 					</div>
 				</div>
 			</nav>
@@ -66,7 +67,7 @@ export default function HomePage() {
 							AI Ad Engine for <span className="text-fuchsia-400">Shopify</span> Growth
 						</h1>
 						<p className="mt-5 text-neutral-300 text-lg">
-							Cut ad spend by <span className="text-white font-semibold">30%+</span> with AI‑generated creatives, smarter targeting, and one‑click posting to TikTok, Meta, and Google.
+							Cut ad spend by <span className="text-white font-semibold">30%+</span> with AI-generated creatives, smarter targeting, and one-click posting to TikTok, Meta, and Google.
 						</p>
 						<div className="mt-8 flex flex-wrap gap-3">
 							<a href="#pricing" className="rounded-xl bg-fuchsia-500 px-6 py-3 font-semibold text-neutral-900 hover:bg-fuchsia-400">
@@ -88,7 +89,7 @@ export default function HomePage() {
 								After <span className="text-fuchsia-400 font-semibold">Revvy Pro</span>
 							</div>
 							<div className="rounded-xl border border-fuchsia-700/50 bg-neutral-950 p-4">
-								<p className="text-neutral-100 text-sm">AI copy + tailored images + lookalike targeting → CPA ↓ 32%, ROAS ↑ 1.4×</p>
+								<p className="text-neutral-100 text-sm">AI copy + tailored images + lookalike targeting → CPA ↓ 32%, ROAS ↑ 1.4x</p>
 							</div>
 						</div>
 					</div>
@@ -100,10 +101,10 @@ export default function HomePage() {
 				<div className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
 					<p className="text-center text-neutral-400 text-sm">Works with your ad stack</p>
 					<div className="mt-4 flex flex-wrap items-center justify-center gap-10 opacity-80">
-						<img src="/logos/Meta.png" alt="Meta Ads" className="h-8" loading="lazy" />
-						<img src="/logos/google.png" alt="Google Ads" className="h-8" loading="lazy" />
-						<img src="/logos/tiktok.png" alt="TikTok Ads" className="h-8" loading="lazy" />
-						<img src="/logos/shopify.png" alt="Shopify" className="h-8" loading="lazy" />
+						<Image src="/logos/Meta.png" alt="Meta Ads" className="h-8" loading="lazy" />
+						<Image src="/logos/google.png" alt="Google Ads" className="h-8" loading="lazy" />
+						<Image src="/logos/tiktok.png" alt="TikTok Ads" className="h-8" loading="lazy" />
+						<Image src="/logos/shopify.png" alt="Shopify" className="h-8" loading="lazy" />
 					</div>
 				</div>
 			</section>
@@ -115,7 +116,7 @@ export default function HomePage() {
 					{[
 						{ t: "Generate", d: "Paste product URL. We create ad copy, images/video prompts, and hooks." },
 						{ t: "Target", d: "AI proposes audiences and lookalikes most likely to convert." },
-						{ t: "Launch", d: "One‑click posting to TikTok/Meta/Google + weekly AI performance report." },
+						{ t: "Launch", d: "One-click posting to TikTok/Meta/Google + weekly AI performance report." },
 					].map((x, i) => (
 						<div key={i} className="rounded-2xl border border-neutral-800 p-6 bg-neutral-900">
 							<div className="text-fuchsia-400 font-semibold">{String(i + 1).padStart(2, "0")}</div>
@@ -133,7 +134,7 @@ export default function HomePage() {
 					{[
 						{ q: "“Revvy Pro cut our ad costs in half within 2 weeks.”", a: "— Beta User 1, DTC Skincare" },
 						{ q: "“We saved 20+ hours/week with AI-generated creatives.”", a: "— Beta User 2, Agency" },
-						{ q: "“Best $499 we’ve spent — CTR doubled instantly.”", a: "— Beta User 3, Apparel" },
+						{ q: "“Best $499 we've spent — CTR doubled instantly.”", a: "— Beta User 3, Apparel" },
 					].map((t, i) => (
 						<div key={i} className="rounded-2xl border border-neutral-800 bg-neutral-900 p-6">
 							<p className="text-neutral-100">{t.q}</p>
