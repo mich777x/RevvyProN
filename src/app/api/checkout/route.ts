@@ -7,10 +7,24 @@ const CheckoutBody = z.object({
 	mode: z.enum(["subscription", "payment"]).default("subscription"),
 });
 
+// Small helper so we never touch `any`
+function errMsg(e: unknown): string {
+	if (e instanceof Error) return e.message;
+	return "Checkout failed";
+}
+
 export async function POST(req: NextRequest) {
 	try {
-		const raw: unknown = await req.json(); // ← not any
-		const { priceId, mode } = CheckoutBody.parse(raw); // ← now typed
+		// DO NOT destructure from req.json() directly (that yields `any`)
+		const raw: unknown = await req.json();
+
+		const parsed = CheckoutBody.safeParse(raw);
+		if (!parsed.success) {
+			// No `any` here either — Zod types are concrete
+			return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
+		}
+
+		const { priceId, mode } = parsed.data;
 
 		const origin = process.env.NEXT_PUBLIC_SITE_URL || req.nextUrl.origin;
 
@@ -26,12 +40,6 @@ export async function POST(req: NextRequest) {
 
 		return NextResponse.json({ url: session.url }, { status: 200 });
 	} catch (e: unknown) {
-		if (e instanceof z.ZodError) {
-			return NextResponse.json({ error: e.errors }, { status: 400 });
-		}
-		if (e instanceof Error) {
-			return NextResponse.json({ error: e.message }, { status: 500 });
-		}
-		return NextResponse.json({ error: "Checkout failed" }, { status: 500 });
+		return NextResponse.json({ error: errMsg(e) }, { status: 500 });
 	}
 }
