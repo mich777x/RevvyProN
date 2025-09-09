@@ -1,27 +1,41 @@
 // src/app/api/checkout/route.ts
+export const runtime = "nodejs";
+
 import { NextRequest, NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
+import { z } from "zod";
+import { assertServerEnv } from "@/lib/assertEnv";
 
-export async function POST(req: NextRequest) {
+const CheckoutBody = z.object({
+	priceId: z.string().min(1),
+	mode: z.enum(["subscription", "payment"]).default("subscription"),
+});
+
+function toErrMsg(e: unknown): string {
+	if (e instanceof Error) return e.message;
+	return "Checkout failed";
+}
+
+export async function POST(_req: NextRequest) {
 	try {
-		const body = (await req.json()) as {
-			priceId?: string;
-			mode?: "subscription" | "payment";
-		};
+		assertServerEnv();
 
-		const { priceId, mode = "subscription" } = body;
-
-		if (!priceId) {
-			return NextResponse.json({ error: "Missing priceId" }, { status: 400 });
+		const raw: unknown = await _req.json();
+		const parsed = CheckoutBody.safeParse(raw);
+		if (!parsed.success) {
+			return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
 		}
 
-		const origin = process.env.NEXT_PUBLIC_SITE_URL || req.nextUrl.origin;
+		const { priceId, mode } = parsed.data;
+		const origin = process.env.NEXT_PUBLIC_SITE_URL!; // absolute base
+		const successUrl = `${origin}/success?sid={CHECKOUT_SESSION_ID}`;
+		const cancelUrl = `${origin}/cancel`;
 
 		const session = await stripe.checkout.sessions.create({
 			mode,
 			line_items: [{ price: priceId, quantity: 1 }],
-			success_url: `${origin}/success?sid={CHECKOUT_SESSION_ID}`,
-			cancel_url: `${origin}/cancel`,
+			success_url: successUrl,
+			cancel_url: cancelUrl,
 			billing_address_collection: "required",
 			allow_promotion_codes: true,
 			automatic_tax: { enabled: false },
@@ -29,9 +43,8 @@ export async function POST(req: NextRequest) {
 
 		return NextResponse.json({ url: session.url }, { status: 200 });
 	} catch (e: unknown) {
-		if (e instanceof Error) {
-			return NextResponse.json({ error: e.message }, { status: 500 });
-		}
-		return NextResponse.json({ error: "Checkout failed" }, { status: 500 });
+		// Temporary: log to Vercel Functions logs
+		console.error("Checkout error:", e);
+		return NextResponse.json({ error: toErrMsg(e) }, { status: 500 });
 	}
 }
