@@ -1,3 +1,4 @@
+// src/app/api/checkout/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
 import { z } from "zod";
@@ -7,20 +8,20 @@ const CheckoutBody = z.object({
 	mode: z.enum(["subscription", "payment"]).default("subscription"),
 });
 
-// Small helper so we never touch `any`
-function errMsg(e: unknown): string {
+// Helper: never use `any` in catch paths
+function toErrMsg(e: unknown): string {
 	if (e instanceof Error) return e.message;
 	return "Checkout failed";
 }
 
 export async function POST(req: NextRequest) {
 	try {
-		// DO NOT destructure from req.json() directly (that yields `any`)
+		// DO NOT destructure directly from req.json() (that yields implicit any)
 		const raw: unknown = await req.json();
 
+		// Parse & type the body (no any anywhere)
 		const parsed = CheckoutBody.safeParse(raw);
 		if (!parsed.success) {
-			// No `any` here either — Zod types are concrete
 			return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
 		}
 
@@ -40,6 +41,6 @@ export async function POST(req: NextRequest) {
 
 		return NextResponse.json({ url: session.url }, { status: 200 });
 	} catch (e: unknown) {
-		return NextResponse.json({ error: errMsg(e) }, { status: 500 });
+		return NextResponse.json({ error: toErrMsg(e) }, { status: 500 });
 	}
 }
