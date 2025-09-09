@@ -1,15 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
+import type Stripe from "stripe";
 
 export async function POST(req: NextRequest) {
 	try {
 		const { priceId, mode = "subscription" } = await req.json();
+
 		if (!priceId) {
 			return NextResponse.json({ error: "Missing priceId" }, { status: 400 });
 		}
 
 		const origin = process.env.NEXT_PUBLIC_SITE_URL || req.nextUrl.origin;
-		const session = await stripe.checkout.sessions.create({
+
+		const session: Stripe.Checkout.Session = await stripe.checkout.sessions.create({
 			mode, // "subscription" or "payment"
 			line_items: [{ price: priceId, quantity: 1 }],
 			success_url: `${origin}/success?sid={CHECKOUT_SESSION_ID}`,
@@ -21,7 +24,7 @@ export async function POST(req: NextRequest) {
 
 		return NextResponse.json({ url: session.url }, { status: 200 });
 	} catch (e: unknown) {
-		// 🔹 Narrow unknown before using
+		// Narrowing unknown
 		if (e instanceof Error) {
 			return NextResponse.json({ error: e.message }, { status: 500 });
 		}
