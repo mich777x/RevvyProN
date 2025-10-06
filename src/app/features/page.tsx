@@ -1,8 +1,25 @@
+// src/app/features/page.tsx
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Link from "next/link";
 
-const features = [
+/* ---------- Types ---------- */
+type FeatureKey = "copy" | "budget" | "xchannel" | "audience" | "creative" | "shopify";
+
+type Feature = {
+	k: FeatureKey;
+	title: string;
+	blurb: string;
+	bullets: string[];
+};
+
+type Plan = {
+	name: string;
+	includes: Record<FeatureKey, boolean>;
+};
+
+/* ---------- Data ---------- */
+const features: Feature[] = [
 	{
 		k: "copy",
 		title: "AI Ad Copy Generator",
@@ -41,10 +58,19 @@ const features = [
 	},
 ];
 
-const plans = [
-	{ name: "Core", includes: { copy: true, budget: true, xchannel: false, audience: true, creative: false, shopify: true } },
-	{ name: "Pro", includes: { copy: true, budget: true, xchannel: true, audience: true, creative: true, shopify: true } },
-	{ name: "Lifetime (Launch)", includes: { copy: true, budget: true, xchannel: true, audience: true, creative: true, shopify: true } },
+const plans: Plan[] = [
+	{
+		name: "Core",
+		includes: { copy: true, budget: true, xchannel: false, audience: true, creative: false, shopify: true },
+	},
+	{
+		name: "Pro",
+		includes: { copy: true, budget: true, xchannel: true, audience: true, creative: true, shopify: true },
+	},
+	{
+		name: "Lifetime (Launch)",
+		includes: { copy: true, budget: true, xchannel: true, audience: true, creative: true, shopify: true },
+	},
 ];
 
 export const metadata = {
@@ -52,23 +78,24 @@ export const metadata = {
 	description: "See how RevvyPro cuts ad spend and doubles ROI with AI.",
 };
 
+/* ---------- Page ---------- */
 export default function FeaturesPage() {
 	return (
 		<main>
 			<Nav />
+
 			{/* Breadcrumb / Back bar */}
 			<div className="border-b border-white/10 bg-white/[0.02]">
 				<div className="container flex items-center gap-3 py-3 text-sm">
-					<Link href="/" className="opacity-80 hover:opacity-100 transition">
+					<a href="/" className="opacity-80 hover:opacity-100 transition">
 						Home
-					</Link>
+					</a>
 					<span className="opacity-40">/</span>
 					<span className="opacity-100">Features</span>
-
 					<div className="ml-auto">
-						<Link href="/" className="inline-flex items-center gap-2 rounded-lg px-3 py-1.5 border border-white/12 hover:bg-white/5 transition">
+						<a href="/" className="inline-flex items-center gap-2 rounded-lg px-3 py-1.5 border border-white/12 hover:bg-white/5 transition">
 							← Back to Home
-						</Link>
+						</a>
 					</div>
 				</div>
 			</div>
@@ -127,7 +154,7 @@ export default function FeaturesPage() {
 									<tr key={f.k} className="border-t border-white/10">
 										<td className="px-4 py-3">{f.title}</td>
 										{plans.map((p) => {
-											const on = (p.includes as any)[f.k];
+											const on = p.includes[f.k]; // ✅ strongly typed
 											return (
 												<td key={p.name} className="px-4 py-3">
 													{on ? <span className="inline-block h-2 w-2 rounded-full bg-rp-accent" /> : <span className="inline-block h-2 w-2 rounded-full bg-white/15" />}
