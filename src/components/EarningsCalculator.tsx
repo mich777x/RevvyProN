@@ -25,7 +25,7 @@ export default function EarningsCalculator() {
 					{suffix}
 				</span>
 			</div>
-			<input type="range" className="w-full accent-current" min={min} max={max} step={step} value={value} onChange={(e) => onChange(Number(e.target.value))} />
+			<input t="range" className="w-full accent-current" min={min} max={max} step={step} value={value} onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(Number(e.currentTarget.value))} />
 		</div>
 	);
 

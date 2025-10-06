@@ -1,4 +1,3 @@
-// src/app/features/page.tsx
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import Link from "next/link";
@@ -87,15 +86,15 @@ export default function FeaturesPage() {
 			{/* Breadcrumb / Back bar */}
 			<div className="border-b border-white/10 bg-white/[0.02]">
 				<div className="container flex items-center gap-3 py-3 text-sm">
-					<a href="/" className="opacity-80 hover:opacity-100 transition">
+					<Link href="/" className="opacity-80 hover:opacity-100 transition">
 						Home
-					</a>
+					</Link>
 					<span className="opacity-40">/</span>
 					<span className="opacity-100">Features</span>
 					<div className="ml-auto">
-						<a href="/" className="inline-flex items-center gap-2 rounded-lg px-3 py-1.5 border border-white/12 hover:bg-white/5 transition">
+						<Link href="/" className="inline-flex items-center gap-2 rounded-lg px-3 py-1.5 border border-white/12 hover:bg-white/5 transition">
 							← Back to Home
-						</a>
+						</Link>
 					</div>
 				</div>
 			</div>
