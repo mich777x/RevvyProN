@@ -5,7 +5,7 @@ import EarningsCalculator from "@/components/EarningsCalculator";
 
 export const metadata = {
 	title: "Affiliate Program — RevvyPro",
-	description: "Earn 50–60% per signup promoting RevvyPro to your audience.",
+	description: "Earn 50-60% per signup promoting RevvyPro to your audience.",
 };
 
 export default function AffiliatesPage() {
@@ -53,7 +53,7 @@ export default function AffiliatesPage() {
 							{[
 								["Base Commission", "50% per signup"],
 								["Launch Boost", "60% for top creators"],
-								["Avg Payout", "$150–$500 / sale"],
+								["Avg Payout", "$150-$500 / sale"],
 							].map(([k, v]) => (
 								<div key={k} className="p-5 rounded-xl border border-white/10 bg-white/5">
 									<p className="text-xs text-rp-sub">{k}</p>
@@ -69,7 +69,7 @@ export default function AffiliatesPage() {
 			<section className="container pb-6">
 				<div className="grid md:grid-cols-3 gap-6">
 					{[
-						["High Commissions", "50–60% per signup with weekly payouts."],
+						["High Commissions", "50-60% per signup with weekly payouts."],
 						["Assets Provided", "Scripts, B-roll, thumbnails, captions, CTAs."],
 						["Creator-First Terms", "No exclusivity. Co-branded pages for top partners."],
 						["Real Product Value", "We cut ad spend and lift ROI — easy to sell."],
@@ -136,15 +136,15 @@ export default function AffiliatesPage() {
 						<p className="text-rp-sub mt-2">Tell us about your audience. Instant approval for strong fits.</p>
 					</div>
 					{/* TODO: swap href to your Tally/Formspree modal or page tomorrow */}
-					<a href="#" className="rounded-xl px-6 py-3 font-medium ring-1 ring-rp-primary/35 bg-rp-primary/85 hover:bg-rp-primary transition">
+					<Link href="#" className="rounded-xl px-6 py-3 font-medium ring-1 ring-rp-primary/35 bg-rp-primary/85 hover:bg-rp-primary transition">
 						Apply Now
-					</a>
+					</Link>
 				</div>
 				<p className="mt-3 text-xs text-rp-sub">
 					Questions?{" "}
-					<a className="underline" href="mailto:tron@revvypro.org">
+					<Link className="underline" href="mailto:tron@revvypro.org">
 						tron@revvypro.org
-					</a>
+					</Link>
 				</p>
 			</section>
 
