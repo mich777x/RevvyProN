@@ -1,7 +1,33 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import React, { useMemo, useState, ChangeEvent } from "react";
 import Link from "next/link";
+
+type SliderProps = {
+	label: string;
+	value: number;
+	onChange: (v: number) => void;
+	min: number;
+	max: number;
+	step: number;
+	suffix?: string;
+};
+
+function Slider({ label, value, onChange, min, max, step, suffix }: SliderProps) {
+	const handle = (e: ChangeEvent<HTMLInputElement>) => onChange(Number(e.currentTarget.value));
+	return (
+		<div className="space-y-2">
+			<div className="flex items-center justify-between text-sm">
+				<label className="opacity-80">{label}</label>
+				<span className="text-rp-sub">
+					{value}
+					{suffix}
+				</span>
+			</div>
+			<input type="range" className="w-full accent-current" min={min} max={max} step={step} value={value} onChange={handle} />
+		</div>
+	);
+}
 
 export default function EarningsCalculator() {
 	const [views, setViews] = useState(50000); // monthly audience views
@@ -16,19 +42,6 @@ export default function EarningsCalculator() {
 		return { clicks, sales, rev };
 	}, [views, ctr, conv, payout]);
 
-	const Input = ({ label, value, onChange, min, max, step, suffix }: { label: string; value: number; onChange: (v: number) => void; min: number; max: number; step: number; suffix?: string }) => (
-		<div className="space-y-2">
-			<div className="flex items-center justify-between text-sm">
-				<label className="opacity-80">{label}</label>
-				<span className="text-rp-sub">
-					{value}
-					{suffix}
-				</span>
-			</div>
-			<input t="range" className="w-full accent-current" min={min} max={max} step={step} value={value} onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(Number(e.currentTarget.value))} />
-		</div>
-	);
-
 	return (
 		<div className="rp-card p-6">
 			<h3 className="text-lg font-semibold">Earnings Calculator</h3>
@@ -36,10 +49,10 @@ export default function EarningsCalculator() {
 
 			<div className="mt-5 grid gap-5 md:grid-cols-2">
 				<div className="space-y-5">
-					<Input label="Monthly Views" value={views} onChange={setViews} min={5000} max={1000000} step={5000} />
-					<Input label="Click-Through Rate" value={ctr} onChange={setCtr} min={0.5} max={8} step={0.1} suffix="%" />
-					<Input label="Conversion Rate" value={conv} onChange={setConv} min={1} max={20} step={0.5} suffix="%" />
-					<Input label="Avg Payout per Sale" value={payout} onChange={setPayout} min={100} max={600} step={25} suffix="$" />
+					<Slider label="Monthly Views" value={views} onChange={setViews} min={5000} max={1000000} step={5000} />
+					<Slider label="Click-Through Rate" value={ctr} onChange={setCtr} min={0.5} max={8} step={0.1} suffix="%" />
+					<Slider label="Conversion Rate" value={conv} onChange={setConv} min={1} max={20} step={0.5} suffix="%" />
+					<Slider label="Avg Payout per Sale" value={payout} onChange={setPayout} min={100} max={600} step={25} suffix="$" />
 				</div>
 
 				<div className="rounded-2xl border border-white/10 bg-white/5 p-5 grid gap-4 content-start">

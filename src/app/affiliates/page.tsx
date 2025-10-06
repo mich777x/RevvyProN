@@ -21,6 +21,7 @@ export default function AffiliatesPage() {
 					</Link>
 					<span className="opacity-40">/</span>
 					<span className="opacity-100">Affiliate</span>
+
 					<div className="ml-auto">
 						<Link href="/" className="inline-flex items-center gap-2 rounded-lg px-3 py-1.5 border border-white/12 hover:bg-white/5 transition">
 							← Back to Home
@@ -36,7 +37,7 @@ export default function AffiliatesPage() {
 						<div>
 							<h1 className="text-3xl md:text-5xl font-bold">RevvyPro Affiliate Program</h1>
 							<p className="mt-4 text-rp-sub">
-								Earn <span className="text-white font-medium">50–60% per signup</span> promoting the AI Ad Engine for Shopify. One high-performing video can earn <span className="text-white font-medium">$5k–$20k</span> in a week.
+								Earn <span className="text-white font-medium">50-60% per signup</span> promoting the AI Ad Engine for Shopify. One high-performing video can earn <span className="text-white font-medium">$5k–$20k</span> in a week.
 							</p>
 							<div className="mt-6 flex flex-wrap gap-3">
 								<Link href="#apply" className="rounded-xl px-5 py-3 font-medium ring-1 ring-rp-primary/35 bg-rp-primary/85 hover:bg-rp-primary transition">
@@ -135,16 +136,16 @@ export default function AffiliatesPage() {
 						<h3 className="text-xl font-semibold">Join the Affiliate Launch</h3>
 						<p className="text-rp-sub mt-2">Tell us about your audience. Instant approval for strong fits.</p>
 					</div>
-					{/* TODO: swap href to your Tally/Formspree modal or page tomorrow */}
+					{/* TODO: swap href to your Tally/Formspree modal or page */}
 					<Link href="#" className="rounded-xl px-6 py-3 font-medium ring-1 ring-rp-primary/35 bg-rp-primary/85 hover:bg-rp-primary transition">
 						Apply Now
 					</Link>
 				</div>
 				<p className="mt-3 text-xs text-rp-sub">
 					Questions?{" "}
-					<Link className="underline" href="mailto:tron@revvypro.org">
+					<a className="underline" href="mailto:tron@revvypro.org">
 						tron@revvypro.org
-					</Link>
+					</a>
 				</p>
 			</section>
 
