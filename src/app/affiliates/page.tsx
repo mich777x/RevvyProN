@@ -39,9 +39,9 @@ export default function AffiliatesPage() {
 								Earn <span className="text-white font-medium">50–60% per signup</span> promoting the AI Ad Engine for Shopify. One high-performing video can earn <span className="text-white font-medium">$5k–$20k</span> in a week.
 							</p>
 							<div className="mt-6 flex flex-wrap gap-3">
-								<a href="#apply" className="rounded-xl px-5 py-3 font-medium ring-1 ring-rp-primary/35 bg-rp-primary/85 hover:bg-rp-primary transition">
+								<Link href="#apply" className="rounded-xl px-5 py-3 font-medium ring-1 ring-rp-primary/35 bg-rp-primary/85 hover:bg-rp-primary transition">
 									Apply Now
-								</a>
+								</Link>
 								<Link href="/features" className="rounded-xl px-5 py-3 border border-white/12 hover:bg-white/5 transition">
 									See Features
 								</Link>
