@@ -1,4 +1,3 @@
-// src/components/LiveProofStrip.tsx
 "use client";
 import { motion } from "framer-motion";
 import { ShieldCheck, Rocket } from "lucide-react";
