@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import Footer from "@/components/Footer";
 
 // ✅ Font (Inter recommended; you can swap if you use another)
 import { Inter } from "next/font/google";
@@ -8,7 +9,7 @@ const inter = Inter({ subsets: ["latin"] });
 // ✅ Global metadata for SEO + OG sharing
 export const metadata: Metadata = {
 	title: "RevvyPro — The AI Ad Engine for Shopify",
-	description: "Slash ad spend by up to 40%. Boost ROI 2×. Launch AI-powered campaigns in minutes.",
+	description: "Slash ad spend by up to 40%. Boost ROI 2x. Launch AI-powered campaigns in minutes.",
 	keywords: ["AI Ads", "Shopify Marketing", "RevvyPro", "Ad Engine", "Ecommerce Automation"],
 	authors: [{ name: "RevvyPro Team", url: "https://revvypro.org" }],
 	metadataBase: new URL("https://revvypro.org"),
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
 	// ✅ Open Graph (for link previews)
 	openGraph: {
 		title: "RevvyPro — The AI Ad Engine for Shopify",
-		description: "Slash ad spend by 40%, boost ROI 2×, and launch AI ad campaigns in minutes.",
+		description: "Slash ad spend by 40%, boost ROI 2x, and launch AI ad campaigns in minutes.",
 		url: "https://revvypro.org",
 		siteName: "RevvyPro",
 		images: [
@@ -24,7 +25,7 @@ export const metadata: Metadata = {
 				url: "/og.png",
 				width: 1200,
 				height: 630,
-				alt: "RevvyPro – The AI Ad Engine for Shopify",
+				alt: "RevvyPro - The AI Ad Engine for Shopify",
 			},
 		],
 		locale: "en_US",
@@ -57,6 +58,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
 				{/* ✅ Optional analytics (enable later) */}
 				{/* <script defer data-domain="revvypro.org" src="https://plausible.io/js/script.js" /> */}
+				<Footer />
 			</body>
 		</html>
 	);

@@ -2,7 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-:root { color-scheme: dark; }
+:root {
+  --revvy-violet: #8B5CF6;
+  --revvy-cyan: #22D3EE;
+  --revvy-carbon: #06070A;
+}
 html,body { background: #06070A; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
 
 .rp-card { @apply bg-rp-card/70 backdrop-blur-xl rounded-2xl border border-white/5; }
