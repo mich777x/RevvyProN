@@ -2,7 +2,7 @@ import HeroCinematic from "@/components/HeroCinematic";
 import LiveProofStrip from "@/components/LiveProofStrip";
 import CredibilityRibbon from "@/components/CredibilityRibbon";
 import AffiliateEarnings from "@/components/AffiliateEarnings";
-import ViralShare from "@/components/ViralShare";
+
 import PricingSection from "@/components/PricingSection";
 import StartModal from "@/components/StartModal";
 import PricingCompare from "@/components/PricingCompare";
@@ -26,7 +26,6 @@ export default function Page() {
 			{/* Credibility + Social Proof */}
 			<CredibilityRibbon />
 			<AffiliateEarnings />
-			<ViralShare />
 		</main>
 	);
 }

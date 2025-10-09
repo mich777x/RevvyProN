@@ -21,13 +21,13 @@ export default function PricingFAQ() {
 						<Item key={f.q} q={f.q} a={f.a} />
 					))}
 				</div>
-				<p className="mt-4 text-center text-sm text-white/60">
+				{/* <p className="mt-4 text-center text-sm text-white/60">
 					Still unsure?{" "}
 					<a href="#get-started" className="underline">
 						Launch the demo
 					</a>{" "}
 					— 10 seconds, no card.
-				</p>
+				</p> */}
 			</div>
 		</section>
 	);

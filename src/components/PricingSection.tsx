@@ -1,4 +1,3 @@
-// src/components/PricingSection.tsx
 "use client";
 
 import * as React from "react";

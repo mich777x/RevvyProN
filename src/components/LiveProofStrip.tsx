@@ -1,6 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
-import { ShieldCheck, Rocket } from "lucide-react";
+import { Rocket } from "lucide-react";
 import { kCompactNumber } from "@/lib/format";
 import { sampleProof } from "@/lib/proof";
 
@@ -10,11 +10,6 @@ export default function LiveProofStrip() {
 	return (
 		<div className="bg-black border-y border-white/10">
 			<div className="mx-auto max-w-6xl px-6 py-5 flex items-center gap-6 overflow-x-auto">
-				<span className="inline-flex items-center gap-2 text-white/70 text-sm whitespace-nowrap">
-					<ShieldCheck className="size-4 text-emerald-400" />
-					Verifiable wins (hashed)
-				</span>
-
 				{items.map((p, i) => (
 					<motion.div key={i} initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.05 }} className="shrink-0 rounded-xl border border-white/10 bg-white/5 px-4 py-2">
 						<div className="text-xs text-white/60">

@@ -1,63 +1,57 @@
-import type { Metadata } from "next";
-import "./globals.css";
-import Footer from "@/components/Footer";
-
-// ✅ Font (Inter recommended; you can swap if you use another)
+// src/app/layout.tsx
+import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
-const inter = Inter({ subsets: ["latin"] });
+import "./globals.css";
 
-// ✅ Global metadata for SEO + OG sharing
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
+import Analytics from "@/components/Analytics";
+
+const inter = Inter({ subsets: ["latin"], display: "swap" });
+
 export const metadata: Metadata = {
-	title: "RevvyPro — The AI Ad Engine for Shopify",
-	description: "Slash ad spend by up to 40%. Boost ROI 2x. Launch AI-powered campaigns in minutes.",
-	keywords: ["AI Ads", "Shopify Marketing", "RevvyPro", "Ad Engine", "Ecommerce Automation"],
-	authors: [{ name: "RevvyPro Team", url: "https://revvypro.org" }],
 	metadataBase: new URL("https://revvypro.org"),
-
-	// ✅ Open Graph (for link previews)
+	title: "RevvyPro — The AI Ad Engine for Shopify",
+	description: "Cut ad spend 40%. Boost ROI. Launch in minutes.",
 	openGraph: {
 		title: "RevvyPro — The AI Ad Engine for Shopify",
-		description: "Slash ad spend by 40%, boost ROI 2x, and launch AI ad campaigns in minutes.",
-		url: "https://revvypro.org",
+		description: "Cut ad spend 40%. Boost ROI. Launch in minutes.",
+		url: "/",
 		siteName: "RevvyPro",
-		images: [
-			{
-				url: "/og.png",
-				width: 1200,
-				height: 630,
-				alt: "RevvyPro - The AI Ad Engine for Shopify",
-			},
-		],
-		locale: "en_US",
+		images: [{ url: "/og.png", width: 1200, height: 630, alt: "RevvyPro" }],
 		type: "website",
 	},
-
-	// ✅ Twitter Card meta
 	twitter: {
 		card: "summary_large_image",
 		title: "RevvyPro — The AI Ad Engine for Shopify",
-		description: "AI-powered ad optimization built for Shopify brands and creators.",
+		description: "Cut ad spend 40%. Boost ROI. Launch in minutes.",
 		images: ["/og.png"],
-		creator: "@revvypro",
 	},
-
-	// ✅ Favicon + icons
 	icons: {
-		icon: "/logo.png", // appears in browser tab
-		shortcut: "/logo.png",
-		apple: "/logo.png",
+		icon: "/icon.png",
 	},
+	alternates: { canonical: "https://revvypro.org" },
+	keywords: ["Shopify", "ads", "AI", "marketing", "RevvyPro"],
+	category: "technology",
 };
 
-// ✅ Root layout component
+export const viewport: Viewport = {
+	themeColor: "#06070A",
+	colorScheme: "dark",
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang="en">
-			<body className={`${inter.className} bg-[#06070A] text-white antialiased selection:bg-rp-primary/25`}>
+		<html lang="en" className={`${inter.className} scroll-smooth`}>
+			<head>
+				{/* Speed wins */}
+				<link rel="preconnect" href="https://us.i.posthog.com" />
+				<link rel="preconnect" href="https://js.stripe.com" />
+			</head>
+			<body className="bg-[#06070A] text-white antialiased selection:bg-white/10">
+				<Header />
 				{children}
-
-				{/* ✅ Optional analytics (enable later) */}
-				{/* <script defer data-domain="revvypro.org" src="https://plausible.io/js/script.js" /> */}
+				<Analytics />
 				<Footer />
 			</body>
 		</html>
