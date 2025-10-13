@@ -1,4 +1,3 @@
-// src/app/layout.tsx
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
@@ -10,7 +9,7 @@ import Analytics from "@/components/Analytics";
 const inter = Inter({ subsets: ["latin"], display: "swap" });
 
 export const metadata: Metadata = {
-	metadataBase: new URL("https://revvypro.org"),
+	metadataBase: new URL("https://revvyproai.com"),
 	title: "RevvyPro — The AI Ad Engine for Shopify",
 	description: "Cut ad spend 40%. Boost ROI. Launch in minutes.",
 	openGraph: {
@@ -30,7 +29,7 @@ export const metadata: Metadata = {
 	icons: {
 		icon: "/icon.png",
 	},
-	alternates: { canonical: "https://revvypro.org" },
+	alternates: { canonical: "https://revvyproai.com" },
 	keywords: ["Shopify", "ads", "AI", "marketing", "RevvyPro"],
 	category: "technology",
 };

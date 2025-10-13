@@ -1,4 +1,3 @@
-// src/components/Footer.tsx
 "use client";
 
 import Link from "next/link";
@@ -34,7 +33,7 @@ export default function Footer() {
 				{/* Bottom */}
 				<div className="flex flex-col items-center justify-between gap-4 text-sm text-white/60 sm:flex-row">
 					<p>
-						© {year} RevvyPro. All rights reserved. <span className="hidden sm:inline">Built with ⚡ by Tron.</span>
+						© {year} RevvyPro AI. All rights reserved. <span className="hidden sm:inline">Built with ⚡ by Tron.</span>
 					</p>
 
 					<div className="flex items-center gap-4">

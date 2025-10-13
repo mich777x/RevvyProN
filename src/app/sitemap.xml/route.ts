@@ -1,5 +1,5 @@
 export async function GET() {
-	const base = "https://revvypro.org";
+	const base = "https://revvyproai.com";
 
 	const urls = ["", "/terms", "/privacy", "#pricing"].map((path) => {
 		return `

@@ -60,8 +60,8 @@ export default function PrivacyPage() {
 			<h2>11. Contact</h2>
 			<p>
 				For privacy requests, email{" "}
-				<a href="mailto:tron@revvypro.org" className="text-[#22D3EE] underline">
-					tron@revvypro.org
+				<a href="mailto:tron@revvyproai.com" className="text-[#22D3EE] underline">
+					tron@revvyproai.com
 				</a>
 				.
 			</p>

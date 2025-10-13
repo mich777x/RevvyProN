@@ -3,7 +3,7 @@ export async function GET() {
 	const content = `
 User-agent: *
 Allow: /
-Sitemap: https://revvypro.org/sitemap.xml
+Sitemap: https://revvyproai.com/sitemap.xml
     `.trim();
 
 	return new Response(content, {

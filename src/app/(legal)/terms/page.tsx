@@ -47,8 +47,8 @@ export default function TermsPage() {
 			<h2>10. Contact</h2>
 			<p>
 				Questions? Email{" "}
-				<a href="mailto:tron@revvypro.org" className="text-[#22D3EE] underline">
-					tron@revvypro.org
+				<a href="mailto:tron@revvyproai.com" className="text-[#22D3EE] underline">
+					tron@revvyproai.com
 				</a>
 				.
 			</p>
