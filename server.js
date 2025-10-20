@@ -4,6 +4,7 @@ import helmet from "helmet";
 import morgan from "morgan";
 import rateLimit from "express-rate-limit";
 import dotenv from "dotenv";
+import refundRouter from "./routes/refund.js";
 import { PrismaClient } from "@prisma/client";
 
 dotenv.config();
@@ -51,15 +52,12 @@ app.use(
 );
 if (!isProd) app.use(morgan("dev"));
 
-// NOTE: Stripe webhook needs raw body BEFORE express.json()
 import stripeWebhookRouter from "./routes/stripe.webhook.js";
 app.use("/api/stripe/webhook", express.raw({ type: "application/json" }), stripeWebhookRouter);
 
-// JSON parser for everything else
 app.use(express.json({ limit: "1mb" }));
 app.use(express.urlencoded({ extended: false }));
 
-// subscribe route (after json parser)
 import subscribeRoute from "./routes/stripe.subscribe.js";
 app.use("/api/stripe", subscribeRoute);
 
@@ -113,3 +111,5 @@ process.on("SIGINT", async () => {
 	await prisma.$disconnect();
 	process.exit(0);
 });
+
+app.use("/api/refund", refundRouter);
