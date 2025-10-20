@@ -2,7 +2,6 @@ import HeroCinematic from "@/components/HeroCinematic";
 import LiveProofStrip from "@/components/LiveProofStrip";
 import CredibilityRibbon from "@/components/CredibilityRibbon";
 import AffiliateEarnings from "@/components/AffiliateEarnings";
-
 import PricingSection from "@/components/PricingSection";
 import StartModal from "@/components/StartModal";
 import PricingCompare from "@/components/PricingCompare";

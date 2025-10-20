@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL") // use POOL (serverless) in prod
+  directUrl = env("DIRECT_URL") // use DIRECT (non-pooled) for migrations
+}
+
+model User {
+  id         String      @id @default(cuid())
+  email      String      @unique
+  name       String?
+  payments   Payment[]
+  affiliates Affiliate[]
+  createdAt  DateTime    @default(now())
+}
+
+model Payment {
+  id        String   @id @default(cuid())
+  userId    String
+  amount    Float
+  status    String
+  stripeId  String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model Affiliate {
+  id        String   @id @default(cuid())
+  userId    String
+  code      String   @unique
+  signups   Int      @default(0)
+  revenue   Float    @default(0)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
