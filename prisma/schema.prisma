@@ -8,53 +8,65 @@ datasource db {
   directUrl = env("DIRECT_URL") // use DIRECT (non-pooled) for migrations
 }
 
-model User {
-  id         String      @id @default(cuid())
-  email      String      @unique
-  name       String?
-  payments   Payment[]
-  affiliates Affiliate[]
-  createdAt  DateTime    @default(now())
+model Product {
+  id        String     @id @default(cuid())
+  title     String
+  handle    String     @unique
+  imageUrl  String?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  creatives Creative[]
 }
 
-model Payment {
-  id        String   @id @default(cuid())
-  userId    String
-  amount    Float
-  status    String
-  stripeId  String
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
+model Creative {
+  id          String          @id @default(cuid())
+  productId   String
+  product     Product         @relation(fields: [productId], references: [id])
+  headline    String
+  primary     String
+  description String
+  imagePrompt String?
+  viralScore  Int             @default(0)
+  ctr         Float?
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  runs        PredictionRun[]
+}
 
-  @@index([userId])
+model PredictionRun {
+  id         String   @id @default(cuid())
+  creativeId String
+  creative   Creative @relation(fields: [creativeId], references: [id])
+  cpc        Float?
+  cpa        Float?
+  roi        Float?
+  notes      String?
+  createdAt  DateTime @default(now())
+}
+
+model TuningJob {
+  id         String    @id @default(cuid())
+  status     String    @default("PENDING") // PENDING|RUNNING|DONE|FAILED
+  reason     String?
+  createdAt  DateTime  @default(now())
+  finishedAt DateTime?
 }
 
 model Affiliate {
-  id        String   @id @default(cuid())
-  userId    String
-  code      String   @unique
-  signups   Int      @default(0)
-  revenue   Float    @default(0)
-  createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
-
-  @@index([userId])
+  id        String     @id @default(cuid())
+  userEmail String     @unique
+  refCode   String     @unique
+  earnings  Float      @default(0)
+  createdAt DateTime   @default(now())
+  referrals Referral[]
 }
 
-model Subscription {
-  id               String    @id @default(cuid())
-  userId           String
-  stripeSubId      String    @unique
-  stripeCustomerId String
-  plan             String
-  status           String
-  currentPeriodEnd DateTime
-  // 👇 add these if missing
-  firstChargeAt    DateTime?
-  refunded         Boolean   @default(false)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  @@index([userId])
+model Referral {
+  id          String    @id @default(cuid())
+  affiliateId String
+  affiliate   Affiliate @relation(fields: [affiliateId], references: [id])
+  visitorIp   String?
+  converted   Boolean   @default(false)
+  amount      Float?
+  createdAt   DateTime  @default(now())
 }
