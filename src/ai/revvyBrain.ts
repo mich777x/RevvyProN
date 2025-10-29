@@ -1,4 +1,4 @@
-import { aiClient } from "@/src/lib/aiClient";
+import { aiClient } from "@/lib/aiClient";
 
 export type ProductInput = { title: string; description?: string; imageUrl?: string };
 export type CreativeOutput = { headline: string; primary: string; description: string; imagePrompt?: string };
