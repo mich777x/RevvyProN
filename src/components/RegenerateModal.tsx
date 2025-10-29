@@ -36,7 +36,6 @@ export default function RegenerateModal({ creativeId, onDone }: Props) {
 						<label htmlFor="variantCount" className="text-sm block mb-2">
 							How many?
 						</label>
-
 						<input
 							id="variantCount"
 							type="number"
