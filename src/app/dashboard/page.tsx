@@ -1,5 +1,8 @@
 "use client";
 import { useEffect, useState } from "react";
+import TrendsChart from "@/components/TrendsChart";
+import Leaderboard from "@/components/Leaderboard";
+import RegenerateModal from "@/components/RegenerateModal";
 
 type Creative = {
 	id: string;
@@ -14,12 +17,14 @@ type Creative = {
 export default function DashboardPage() {
 	const [items, setItems] = useState<Creative[]>([]);
 	const [loading, setLoading] = useState(false);
+	const [selected, setSelected] = useState<string | null>(null);
 
 	async function load() {
 		setLoading(true);
 		const res = await fetch("/api/creatives");
 		const data = await res.json();
 		setItems(data);
+		setSelected((prev) => prev ?? data[0]?.id ?? null);
 		setLoading(false);
 	}
 
@@ -51,7 +56,7 @@ export default function DashboardPage() {
 	}
 
 	return (
-		<main className="mx-auto max-w-5xl p-6 space-y-6">
+		<main className="mx-auto max-w-6xl p-6 space-y-6">
 			<div className="flex items-center justify-between">
 				<h1 className="text-2xl font-semibold">Revvy Dashboard</h1>
 				<div className="flex gap-3">
@@ -66,11 +71,15 @@ export default function DashboardPage() {
 
 			{loading && <p className="opacity-70">Loading…</p>}
 
+			{/* Leaderboard */}
+			<Leaderboard />
+
+			{/* Creatives list */}
 			<div className="grid gap-4">
 				{items.map((c) => (
 					<div key={c.id} className="rounded-2xl border p-4">
 						<div className="flex items-center justify-between">
-							<div>
+							<div onClick={() => setSelected(c.id)} className="cursor-pointer">
 								<div className="text-sm uppercase opacity-60">{c.product?.title ?? "Product"}</div>
 								<h3 className="text-lg font-medium">{c.headline}</h3>
 								<p className="text-sm opacity-80">{c.primary}</p>
@@ -89,7 +98,14 @@ export default function DashboardPage() {
 							<button onClick={() => forecast(c.id)} className="rounded-xl px-3 py-2 border">
 								Forecast & Score
 							</button>
+							<RegenerateModal creativeId={c.id} onDone={load} />
 						</div>
+						{/* Chart per selected creative */}
+						{selected === c.id && (
+							<div className="mt-4">
+								<TrendsChart creativeId={c.id} title="CTR/ROI Trends" />
+							</div>
+						)}
 					</div>
 				))}
 			</div>
