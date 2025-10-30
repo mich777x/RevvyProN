@@ -7,6 +7,7 @@ import StartModal from "@/components/StartModal";
 import PricingCompare from "@/components/PricingCompare";
 import PricingFAQ from "@/components/PricingFAQ";
 import StickyCTA from "@/components/StickyCTA";
+import AffiliateTeaser from "@/components/AffiliateTeaser";
 
 export default function Page() {
 	return (
@@ -23,6 +24,7 @@ export default function Page() {
 			<StickyCTA />
 
 			{/* Credibility + Social Proof */}
+			<AffiliateTeaser />
 			<CredibilityRibbon />
 			<AffiliateEarnings />
 		</main>

@@ -6,6 +6,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Analytics from "@/components/Analytics";
 
+import StickyCTA from "@/components/StickyCTA";
+
 const inter = Inter({ subsets: ["latin"], display: "swap" });
 
 export const metadata: Metadata = {
@@ -50,6 +52,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 			<body className="bg-[#06070A] text-white antialiased selection:bg-white/10">
 				<Header />
 				{children}
+				<StickyCTA href="/pricing" text="Lock Founder Price" sub="Limited launch window" />
 				<Analytics />
 				<Footer />
 			</body>

@@ -63,6 +63,14 @@ model Affiliate {
   referrals Referral[]
 }
 
+model AffiliateLead {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  audience  String?
+  notes     String?
+  createdAt DateTime @default(now())
+}
+
 model Referral {
   id          String    @id @default(cuid())
   affiliateId String
