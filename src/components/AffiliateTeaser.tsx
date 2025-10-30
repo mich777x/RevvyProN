@@ -21,8 +21,9 @@ export default function AffiliateTeaser() {
 			const d = await r.json();
 			if (!r.ok) throw new Error(d.error || "Failed");
 			setOk(true);
-		} catch (e: any) {
-			setErr(e.message);
+		} catch (e: unknown) {
+			const msg = e instanceof Error ? e.message : String(e);
+			setErr(msg);
 		} finally {
 			setBusy(false);
 		}
@@ -31,9 +32,9 @@ export default function AffiliateTeaser() {
 	if (ok) {
 		return (
 			<div className="rounded-2xl border p-5 bg-white/60">
-				<div className="font-medium">You're on the list!</div>
+				<div className="font-medium">You`re on the list!</div>
 				<div className="text-sm opacity-70">
-					We'll send your unique link soon. Meanwhile, see{" "}
+					We`ll send your unique link soon. Meanwhile, see{" "}
 					<Link className="underline" href="/affiliate">
 						affiliate info
 					</Link>

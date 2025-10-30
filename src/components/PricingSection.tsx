@@ -2,9 +2,30 @@
 
 import * as React from "react";
 
+// ===== Types =====
+type PricingProps = {
+	userEmail?: string;
+};
+
+type PlanKey = "starter" | "pro" | "agency";
+
+type Plan = {
+	key: PlanKey;
+	name: string;
+	price: string;
+	blurb: string;
+	features: string[];
+};
+
+type CardProps = {
+	plan: Plan;
+	highlighted?: boolean;
+	userEmail?: string;
+};
+
 // Optional: if you have a signed-in user, pass { userEmail } to prefill Stripe's email field.
 // Example usage: <PricingSection userEmail={session?.user?.email} />
-export default function PricingSection({ userEmail }) {
+export default function PricingSection({ userEmail }: PricingProps) {
 	return (
 		<section id="pricing" className="relative z-0 scroll-mt-24 bg-[#06070A] text-white">
 			<div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
@@ -58,9 +79,9 @@ export default function PricingSection({ userEmail }) {
 	);
 }
 
-function Card({ plan, highlighted, userEmail }) {
+function Card({ plan, highlighted, userEmail }: CardProps) {
 	// Read ?aff=CODE (shown to user; actual capture should be Stripe "custom field")
-	const affCode = React.useMemo(() => {
+	const affCode = React.useMemo<string | undefined>(() => {
 		if (typeof window === "undefined") return undefined;
 		const p = new URLSearchParams(window.location.search);
 		const code = p.get("aff");
@@ -68,17 +89,17 @@ function Card({ plan, highlighted, userEmail }) {
 	}, []);
 
 	// Map plan -> Payment Link URL from env
-	const PAYMENT_LINKS = React.useMemo(
+	const PAYMENT_LINKS = React.useMemo<Record<PlanKey, string>>(
 		() => ({
-			starter: process.env.NEXT_PUBLIC_STARTER_LINK || "",
-			pro: process.env.NEXT_PUBLIC_PRO_LINK || "",
-			agency: process.env.NEXT_PUBLIC_AGENCY_LINK || "",
+			starter: process.env.NEXT_PUBLIC_STARTER_LINK ?? "",
+			pro: process.env.NEXT_PUBLIC_PRO_LINK ?? "",
+			agency: process.env.NEXT_PUBLIC_AGENCY_LINK ?? "",
 		}),
 		[]
 	);
 
 	// Stripe Payment Links support ?prefilled_email=
-	function buildStripeUrl(baseUrl) {
+	function buildStripeUrl(baseUrl: string): string {
 		if (!baseUrl) return "";
 		try {
 			const url = new URL(baseUrl);
@@ -91,7 +112,7 @@ function Card({ plan, highlighted, userEmail }) {
 		}
 	}
 
-	function openStripeCheckout(planKey) {
+	function openStripeCheckout(planKey: PlanKey): void {
 		const base = PAYMENT_LINKS[planKey];
 		const url = buildStripeUrl(base);
 		if (!url) {
@@ -119,9 +140,9 @@ function Card({ plan, highlighted, userEmail }) {
 
 				{/* Features */}
 				<ul className="mt-5 space-y-2 text-sm text-white/80">
-					{plan.features.map((f) => (
+					{plan.features.map((f: string) => (
 						<li key={f} className="flex items-start gap-2">
-							<span aria-hidden className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-white/40" />
+							<span aria-hidden="true" className="mt-1 inline-block h-1.5 w-1.5 rounded-full bg-white/40"></span>
 							<span>{f}</span>
 						</li>
 					))}
