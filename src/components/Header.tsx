@@ -1,4 +1,3 @@
-// src/components/Header.tsx
 "use client";
 
 import Link from "next/link";
@@ -21,6 +20,10 @@ export default function Header() {
 				<Link href="/" className="flex items-center gap-3">
 					<Image src="/logo.png" alt="RevvyPro logo" width={36} height={36} priority className="drop-shadow-[0_0_10px_rgba(139,92,246,0.6)]" />
 					<span className="text-lg font-semibold tracking-tight text-white">RevvyPro</span>
+				</Link>
+
+				<Link href="/affiliate" className="text-sm opacity-80 hover:opacity-100">
+					Affiliate
 				</Link>
 
 				{/* Nav */}

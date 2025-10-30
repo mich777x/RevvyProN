@@ -55,12 +55,15 @@ model TuningJob {
 }
 
 model Affiliate {
-  id        String     @id @default(cuid())
-  userEmail String     @unique
-  refCode   String     @unique
-  earnings  Float      @default(0)
-  createdAt DateTime   @default(now())
-  referrals Referral[]
+  id           String        @id @default(cuid())
+  userEmail    String        @unique
+  refCode      String        @unique
+  earnings     Float         @default(0)
+  createdAt    DateTime      @default(now())
+  referrals    Referral[]
+  weeklyPoints Int           @default(0)
+  lastWeekRank Int?
+  bonuses      WeeklyBonus[]
 }
 
 model AffiliateLead {
@@ -79,4 +82,25 @@ model Referral {
   converted   Boolean   @default(false)
   amount      Float?
   createdAt   DateTime  @default(now())
+}
+
+model PayoutTier {
+  id        String @id @default(cuid())
+  name      String
+  percent   Int
+  threshold Int    @default(0)
+}
+
+model WeeklyBonus {
+  id          String    @id @default(cuid())
+  affiliateId String
+  affiliate   Affiliate @relation(fields: [affiliateId], references: [id])
+  weekStart   DateTime // Monday 00:00:00 UTC (normalized)
+  rank        Int
+  bonusAmount Float
+  paid        Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+
+  @@unique([affiliateId, weekStart])
+  @@index([weekStart])
 }

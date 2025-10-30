@@ -1,9 +1,10 @@
-// src/components/HeroCinematic.tsx
 "use client";
 
 import React from "react";
+import useRefCapture from "@/hooks/useRefCapture";
 
 export default function HeroCinematic() {
+	useRefCapture();
 	const bars = [12, 36, 28, 44, 30, 52, 41];
 	const line = [22, 28, 25, 34, 31, 45, 39, 52];
 	const linePath = (() => {
