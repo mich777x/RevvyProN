@@ -1,109 +1,114 @@
-import Stripe from "stripe";
 import { NextResponse } from "next/server";
+import { headers } from "next/headers";
+import { stripe } from "@/lib/stripe";
+import { prisma } from "@/lib/prisma"; // <-- singleton client
+import type Stripe from "stripe";
 
 export const runtime = "nodejs";
-
-const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY!;
-const STRIPE_WEBHOOK_SECRET = process.env.STRIPE_WEBHOOK_SECRET!;
-if (!STRIPE_SECRET_KEY || !STRIPE_WEBHOOK_SECRET) {
-	throw new Error("Missing STRIPE_SECRET_KEY or STRIPE_WEBHOOK_SECRET");
-}
-
-const stripe = new Stripe(STRIPE_SECRET_KEY, { apiVersion: "2024-06-20" });
-
-// Map price IDs → plan
-const PRICE_TO_PLAN: Record<string, "starter" | "pro" | "agency"> = {
-	[process.env.STARTER_PRICE_ID as string]: "starter",
-	[process.env.PRO_PRICE_ID as string]: "pro",
-	[process.env.AGENCY_PRICE_ID as string]: "agency",
-};
+export const dynamic = "force-dynamic";
 
 export async function POST(req: Request) {
-	const sig = (req.headers.get("stripe-signature") || "") as string;
+	// Stripe requires the raw body
+	const rawBody = await req.text();
+
+	const headerStore = await headers();
+	const sig = headerStore.get("stripe-signature");
+	if (!sig) {
+		return NextResponse.json({ error: "Missing stripe-signature header" }, { status: 400 });
+	}
 
 	let event: Stripe.Event;
-	let body: string;
-
 	try {
-		body = await req.text();
-	} catch {
-		return new NextResponse("Invalid body", { status: 400 });
+		event = stripe.webhooks.constructEvent(rawBody, sig, process.env.STRIPE_WEBHOOK_SECRET as string);
+	} catch (err: unknown) {
+		const message = err instanceof Error ? err.message : "invalid_signature";
+		return NextResponse.json({ error: `Webhook signature verification failed: ${message}` }, { status: 400 });
 	}
 
-	try {
-		event = stripe.webhooks.constructEvent(body, sig, STRIPE_WEBHOOK_SECRET);
-	} catch (err: any) {
-		console.error("Webhook signature error:", err?.message || err);
-		return new NextResponse(`Webhook Error: ${err.message}`, { status: 400 });
-	}
+	// Default affiliate revenue share (can move to PayoutTier logic later)
+	const AFF_SHARE = 0.5;
 
 	try {
 		switch (event.type) {
 			case "checkout.session.completed": {
 				const s = event.data.object as Stripe.Checkout.Session;
-				if (s.mode !== "subscription") break;
+				const refCode = s.metadata?.refCode ?? "";
+				const amountCents = s.amount_total ?? 0;
+				const amount = amountCents / 100;
 
-				// Pull full subscription to get price + metadata
-				const sub = await stripe.subscriptions.retrieve(String(s.subscription));
-				const priceId = sub.items.data[0]?.price?.id;
-				const plan = (priceId && PRICE_TO_PLAN[priceId]) || "starter"; // default
+				if (refCode && amount > 0) {
+					// affiliate must be uniquely keyed by refCode
+					const aff = await prisma.affiliate.findUnique({ where: { refCode } });
+					if (aff) {
+						// ensure one referral per session (requires unique index on stripeSessionId)
+						let ref = await prisma.referral.findUnique({
+							where: { stripeSessionId: s.id },
+						});
 
-				// Optional affiliate code
-				const affCode = sub.metadata?.affiliate_code || sub.items.data[0]?.price?.metadata?.affiliate_code || null;
+						if (!ref) {
+							ref = await prisma.referral.create({
+								data: {
+									affiliateId: aff.id,
+									converted: true,
+									amount: amount * AFF_SHARE,
+									stripeSessionId: s.id,
+								},
+							});
+						}
 
-				const email = s.customer_details?.email || s.customer_email || "";
-				const customerId = String(s.customer);
-
-				// TODO: upsert to your DB (Prisma) here.
-				// await prisma.user.upsert({ ... });
-				// await prisma.subscription.upsert({ ... });
-
-				// TODO: send welcome email if you’ve wired Resend
-				// await sendWelcome(email);
-
-				console.log("✅ checkout.session.completed", { email, customerId, plan, affCode });
+						// credit earnings idempotently by session uniqueness
+						await prisma.affiliate.update({
+							where: { id: aff.id },
+							data: { earnings: (aff.earnings || 0) + amount * AFF_SHARE },
+						});
+					}
+				}
 				break;
 			}
 
 			case "invoice.paid": {
 				const inv = event.data.object as Stripe.Invoice;
-				const amount = (inv.amount_paid || 0) / 100;
-				const currency = inv.currency || "usd";
-				const subscriptionId = String(inv.subscription || "");
 
-				// TODO: insert/update invoice row in DB and credit affiliate revenue if applicable
+				// Ensure price objects are expanded so metadata is present at runtime
+				const expanded = await stripe.invoices.retrieve(inv.id, {
+					expand: ["lines.data.price"],
+				});
 
-				console.log("🧾 invoice.paid", { subscriptionId, amount, currency });
-				break;
-			}
+				const amount = (expanded.amount_paid ?? 0) / 100;
 
-			case "customer.subscription.updated":
-			case "customer.subscription.created": {
-				const sub = event.data.object as Stripe.Subscription;
-				const priceId = sub.items.data[0]?.price?.id;
-				const plan = (priceId && PRICE_TO_PLAN[priceId]) || "starter";
+				// Helper: read refCode from an optionally-present price field without `any`
+				type PriceLike = { metadata?: Record<string, string> | null } | null | undefined;
+				const getRefFromLine = (li: Stripe.InvoiceLineItem): string => {
+					const maybePrice = (li as unknown as { price?: PriceLike }).price;
+					const meta = maybePrice && typeof maybePrice === "object" ? (maybePrice as { metadata?: Record<string, string> | null }).metadata : undefined;
+					return (meta?.refCode as string | undefined) ?? "";
+				};
 
-				// TODO: upsert subscription status & currentPeriodEnd in DB
+				const refFromLines = expanded.lines?.data?.map(getRefFromLine).find(Boolean) ?? "";
 
-				console.log(`🔄 ${event.type}`, { subId: sub.id, status: sub.status, plan });
-				break;
-			}
+				const refCode = refFromLines || (expanded.metadata?.refCode ?? "");
 
-			case "customer.subscription.deleted": {
-				const sub = event.data.object as Stripe.Subscription;
-				// TODO: mark subscription canceled in DB
-				console.log("🛑 subscription.deleted", { subId: sub.id });
+				if (refCode && amount > 0) {
+					const aff = await prisma.affiliate.findUnique({ where: { refCode } });
+					if (aff) {
+						await prisma.affiliate.update({
+							where: { id: aff.id },
+							data: { earnings: (aff.earnings || 0) + amount * AFF_SHARE },
+						});
+					}
+				}
 				break;
 			}
 
 			default:
-				// Ignore the rest for now
+				// ignore others
 				break;
 		}
 
-		return NextResponse.json({ received: true });
-	} catch (err: any) {
-		console.error("Webhook handler error:", err?.message || err);
-		return new NextResponse("Webhook processing failed", { status: 500 });
+		return NextResponse.json({ received: true }, { status: 200 });
+	} catch (err: unknown) {
+		const message = err instanceof Error ? err.message : "handler_error";
+		console.error("webhook handler error:", err);
+		return NextResponse.json({ error: message }, { status: 500 });
 	}
 }

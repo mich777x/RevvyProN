@@ -55,15 +55,18 @@ model TuningJob {
 }
 
 model Affiliate {
-  id           String        @id @default(cuid())
-  userEmail    String        @unique
-  refCode      String        @unique
-  earnings     Float         @default(0)
-  createdAt    DateTime      @default(now())
-  referrals    Referral[]
-  weeklyPoints Int           @default(0)
-  lastWeekRank Int?
-  bonuses      WeeklyBonus[]
+  id              String        @id @default(cuid())
+  userEmail       String        @unique
+  refCode         String        @unique
+  earnings        Float         @default(0)
+  createdAt       DateTime      @default(now())
+  referrals       Referral[]
+  // Gamification
+  weeklyPoints    Int           @default(0)
+  lastWeekRank    Int?
+  bonuses         WeeklyBonus[]
+  // Stripe payouts (optional connect flow later)
+  stripeAccountId String?
 }
 
 model AffiliateLead {
@@ -75,13 +78,15 @@ model AffiliateLead {
 }
 
 model Referral {
-  id          String    @id @default(cuid())
-  affiliateId String
-  affiliate   Affiliate @relation(fields: [affiliateId], references: [id])
-  visitorIp   String?
-  converted   Boolean   @default(false)
-  amount      Float?
-  createdAt   DateTime  @default(now())
+  id              String    @id @default(cuid())
+  affiliateId     String
+  affiliate       Affiliate @relation(fields: [affiliateId], references: [id])
+  visitorIp       String?
+  converted       Boolean   @default(false)
+  amount          Float?
+  // Link to Stripe session for idempotency
+  stripeSessionId String?   @unique
+  createdAt       DateTime  @default(now())
 }
 
 model PayoutTier {
@@ -92,14 +97,15 @@ model PayoutTier {
 }
 
 model WeeklyBonus {
-  id          String    @id @default(cuid())
-  affiliateId String
-  affiliate   Affiliate @relation(fields: [affiliateId], references: [id])
-  weekStart   DateTime // Monday 00:00:00 UTC (normalized)
-  rank        Int
-  bonusAmount Float
-  paid        Boolean   @default(false)
-  createdAt   DateTime  @default(now())
+  id             String    @id @default(cuid())
+  affiliateId    String
+  affiliate      Affiliate @relation(fields: [affiliateId], references: [id])
+  weekStart      DateTime // Monday 00:00:00 UTC (normalized)
+  rank           Int
+  bonusAmount    Float
+  paid           Boolean   @default(false)
+  stripePayoutId String?
+  createdAt      DateTime  @default(now())
 
   @@unique([affiliateId, weekStart])
   @@index([weekStart])

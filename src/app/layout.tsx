@@ -13,20 +13,20 @@ const inter = Inter({ subsets: ["latin"], display: "swap" });
 export const metadata: Metadata = {
 	metadataBase: new URL("https://revvyproai.com"),
 	title: "RevvyPro — The AI Ad Engine for Shopify",
-	description: "Cut ad spend 40%. Boost ROI. Launch in minutes.",
+	description: "Generate, score, and evolve high-CTR Shopify ads. Adaptive tuner improves results every day.",
 	openGraph: {
 		title: "RevvyPro — The AI Ad Engine for Shopify",
-		description: "Cut ad spend 40%. Boost ROI. Launch in minutes.",
+		description: "Generate, score, and evolve high-CTR Shopify ads. Adaptive tuner improves results every day.",
 		url: "/",
 		siteName: "RevvyPro",
-		images: [{ url: "/og.png", width: 1200, height: 630, alt: "RevvyPro" }],
+		images: [{ url: "/icon.png", width: 1200, height: 630, alt: "RevvyPro" }],
 		type: "website",
 	},
 	twitter: {
 		card: "summary_large_image",
 		title: "RevvyPro — The AI Ad Engine for Shopify",
-		description: "Cut ad spend 40%. Boost ROI. Launch in minutes.",
-		images: ["/og.png"],
+		description: "Generate, score, and evolve high-CTR Shopify ads. Adaptive tuner improves results every day.",
+		images: ["/icon.png"],
 	},
 	icons: {
 		icon: "/icon.png",

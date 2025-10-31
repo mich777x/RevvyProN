@@ -11,6 +11,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@next/font": "^14.2.15",
     "@prisma/client": "^6.18.0",
     "body-parser": "^2.2.0",
     "cors": "^2.8.5",
